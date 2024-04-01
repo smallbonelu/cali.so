@@ -1,6 +1,6 @@
 import { type Metadata } from 'next'
 
-import { Projects } from '~/app/(main)/projects/Projects'
+import { Projects } from '~/app/[locale]/(main)/projects/Projects'
 import { Container } from '~/components/ui/Container'
 
 const title = '我的项目'

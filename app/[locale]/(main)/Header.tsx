@@ -17,8 +17,8 @@ import {
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-import { NavigationBar } from '~/app/(main)/NavigationBar'
-import { ThemeSwitcher } from '~/app/(main)/ThemeSwitcher'
+import { NavigationBar } from '~/app/[locale]/(main)/NavigationBar'
+import { ThemeSwitcher } from '~/app/[locale]/(main)/ThemeSwitcher'
 import {
   GitHubBrandIcon,
   GoogleBrandIcon,
@@ -30,6 +30,7 @@ import { Container } from '~/components/ui/Container'
 import { Tooltip } from '~/components/ui/Tooltip'
 import { url } from '~/lib'
 import { clamp } from '~/lib/math'
+
 export function Header() {
   const isHomePage = usePathname() === '/'
 

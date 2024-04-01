@@ -1,0 +1,17 @@
+{
+  "Nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "projects": "Projects"
+   
+  },
+  "Footer": {
+    "site based on": "Site based on",
+    "total views": "Total Views",
+    "recent visitors from": "Recent Visitor From"
+  },
+  "Blog": {
+    "recent posts": "Recent Posts",
+    "estimated": "Estimated"
+  }
+}

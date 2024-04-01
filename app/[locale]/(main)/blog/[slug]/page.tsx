@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { BlogPostPage } from '~/app/(main)/blog/BlogPostPage'
+import { BlogPostPage } from '~/app/[locale]/(main)/blog/BlogPostPage'
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
 import { url } from '~/lib'
@@ -42,8 +42,8 @@ export const generateMetadata = async ({
       title,
       description,
       card: 'summary_large_image',
-      site: '@thecalicastle',
-      creator: '@thecalicastle',
+      site: '@smallbonelu',
+      creator: '@smallbonelu',
     },
   } satisfies Metadata
 }

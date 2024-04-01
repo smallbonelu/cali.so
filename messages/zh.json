@@ -1,0 +1,16 @@
+{
+ "Nav": {
+    "home": "首页",
+    "blog": "博客",
+    "projects": "项目"
+ },
+ "Footer": {
+    "site based on": "网站基于",
+    "total views": "总浏览量",
+    "recent visitors from": "最近访客来自"
+ },
+ "Blog": {
+    "recent posts": "近期文章",
+    "estimated": "预计"
+  }
+}

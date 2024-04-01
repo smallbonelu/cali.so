@@ -1,17 +1,24 @@
 import './blog/[slug]/blog.css'
 
 import { Analytics } from '@vercel/analytics/react'
+import { NextIntlClientProvider, useMessages } from 'next-intl'
 import { Suspense } from 'react'
 
-import { Footer } from '~/app/(main)/Footer'
-import { Header } from '~/app/(main)/Header'
-import { QueryProvider } from '~/app/QueryProvider'
+import { Footer } from '~/app/[locale]/(main)/Footer'
+import { Header } from '~/app/[locale]/(main)/Header'
+import { QueryProvider } from '~/app/[locale]/QueryProvider'
 
 export default function BlogLayout({
   children,
+  params: { locale },
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  params: { locale: string }
 }) {
+
+   // Receive messages provided in `i18n.ts`
+   const messages = useMessages();
+
   return (
     <>
       <div className="pointer-events-none fixed inset-0 select-none bg-[url('/grid-black.svg')] bg-top bg-repeat dark:bg-[url('/grid.svg')]" />
@@ -23,9 +30,10 @@ export default function BlogLayout({
         </div>
       </div>
 
+      <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
         <div className="relative text-zinc-800 dark:text-zinc-200">
-          <Header />
+          <Header/>
           <main>{children}</main>
           <Suspense>
             <Footer />
@@ -34,6 +42,7 @@ export default function BlogLayout({
       </QueryProvider>
 
       <Analytics />
+        </NextIntlClientProvider>
     </>
   )
 }

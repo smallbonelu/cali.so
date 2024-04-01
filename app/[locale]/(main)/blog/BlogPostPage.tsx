@@ -6,8 +6,8 @@ import Image from 'next/image'
 import React from 'react'
 import Balancer from 'react-wrap-balancer'
 
-import { BlogPostStateLoader } from '~/app/(main)/blog/BlogPostStateLoader'
-import { BlogReactions } from '~/app/(main)/blog/BlogReactions'
+import { BlogPostStateLoader } from '~/app/[locale]/(main)/blog/BlogPostStateLoader'
+import { BlogReactions } from '~/app/[locale]/(main)/blog/BlogReactions'
 import {
   CalendarIcon,
   CursorClickIcon,

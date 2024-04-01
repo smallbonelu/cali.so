@@ -1,16 +1,74 @@
 import { authMiddleware } from '@clerk/nextjs'
 import { get } from '@vercel/edge-config'
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextFetchEvent, type NextMiddleware, type NextRequest, NextResponse } from 'next/server'
+import createMiddleware from 'next-intl/middleware';
 
 import { kvKeys } from '~/config/kv'
+import { defaultLocale, locales } from '~/config/locales'
 import { env } from '~/env.mjs'
 import countries from '~/lib/countries.json'
 import { getIP } from '~/lib/ip'
 import { redis } from '~/lib/redis'
 
+type MiddlewareFactory = (middleware: NextMiddleware) => NextMiddleware;
+
+const publicRoutes = [
+  '/',
+  '/api(.*)',
+  '/blog(.*)',
+  '/confirm(.*)',
+  '/projects',
+  '/guestbook',
+  '/newsletters(.*)',
+  '/about',
+  '/rss',
+  '/feed',
+  '/ama',
+]
 export const config = {
   matcher: ['/((?!_next|studio|.*\\..*).*)'],
 }
+
+function chain(functions: MiddlewareFactory[] = [], index = 0): NextMiddleware {
+  const current = functions[index]
+
+  if (current) {
+    const next = chain(functions, index + 1)
+    return current(next)
+  }
+
+  return () => NextResponse.next()
+}
+
+const localeMiddleware: MiddlewareFactory = () => {
+  return (req: NextRequest, _next: NextFetchEvent) => {
+    const publicPathnameRegex = RegExp(
+      `^(/(${locales.join('|')}))?(${publicRoutes
+        .flatMap((p) => (p === '/' ? ['', '/'] : p))
+        .join('|')})/?$`,
+      'i'
+    );
+    const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+
+    if (isPublicPage) {
+      const middleware = createMiddleware({
+        // A list of all locales that are supported
+        locales,
+
+        // Used when no locale matches
+        defaultLocale,
+
+        // 默认语言不重定向
+        localePrefix: 'as-needed',
+      });
+
+      return middleware(req);
+    } else {
+      return NextResponse.next();
+    }
+  }
+}
+
 
 async function beforeAuthMiddleware(req: NextRequest) {
   const { geo, nextUrl } = req
@@ -52,19 +110,11 @@ async function beforeAuthMiddleware(req: NextRequest) {
   return NextResponse.next()
 }
 
-export default authMiddleware({
-  beforeAuth: beforeAuthMiddleware,
-  publicRoutes: [
-    '/',
-    '/api(.*)',
-    '/blog(.*)',
-    '/confirm(.*)',
-    '/projects',
-    '/guestbook',
-    '/newsletters(.*)',
-    '/about',
-    '/rss',
-    '/feed',
-    '/ama',
-  ],
-})
+export default chain([
+  localeMiddleware,
+  () =>
+    authMiddleware({
+      beforeAuth: beforeAuthMiddleware,
+      publicRoutes,
+    })
+])

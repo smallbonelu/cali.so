@@ -1,5 +1,6 @@
 import { count, isNotNull } from 'drizzle-orm'
 import Link from 'next/link'
+import { useLocale,useTranslations } from 'next-intl'
 import React from 'react'
 
 import { CursorClickIcon, UsersIcon } from '~/assets'
@@ -13,7 +14,6 @@ import { env } from '~/env.mjs'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
 
-import { Newsletter } from './Newsletter'
 
 function NavLink({
   href,
@@ -33,11 +33,12 @@ function NavLink({
 }
 
 function Links() {
+  const t = useTranslations('Nav')
   return (
     <nav className="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-      {navigationItems.map(({ href, text }) => (
+      {navigationItems.map(({ href, tValue }) => (
         <NavLink key={href} href={href}>
-          {text}
+          {t(tValue)}
         </NavLink>
       ))}
     </nav>
@@ -45,6 +46,9 @@ function Links() {
 }
 
 async function TotalPageViews() {
+  const t = useTranslations('Footer')
+  const locale = useLocale()
+
   let views: number
   if (env.VERCEL_ENV === 'production') {
     views = await redis.incr(kvKeys.totalPageViews)
@@ -56,8 +60,8 @@ async function TotalPageViews() {
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <UsersIcon className="h-4 w-4" />
       <span title={`${Intl.NumberFormat('en-US').format(views)}次浏览`}>
-        总浏览量&nbsp;
-        <span className="font-medium">{prettifyNumber(views, true)}</span>
+        {t('total views')}&nbsp;
+        <span className="font-medium">{prettifyNumber(views, locale === 'zh')}</span>
       </span>
     </span>
   )
@@ -69,6 +73,7 @@ type VisitorGeolocation = {
   flag: string
 }
 async function LastVisitorInfo() {
+  const t = useTranslations('Footer')
   let lastVisitor: VisitorGeolocation | undefined = undefined
   if (env.VERCEL_ENV === 'production') {
     const [lv, cv] = await redis.mget<VisitorGeolocation[]>(
@@ -90,7 +95,7 @@ async function LastVisitorInfo() {
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <CursorClickIcon className="h-4 w-4" />
       <span>
-        最近访客来自&nbsp;
+        {t('recent visitors from')}&nbsp;
         {[lastVisitor.city, lastVisitor.country].filter(Boolean).join(', ')}
       </span>
       <span className="font-medium">{lastVisitor.flag}</span>
@@ -99,6 +104,7 @@ async function LastVisitorInfo() {
 }
 
 export async function Footer() {
+  const t = useTranslations('Footer')
   const [subs] = await db
     .select({
       subCount: count(),
@@ -111,14 +117,14 @@ export async function Footer() {
       <Container.Outer>
         <div className="border-t border-zinc-100 pb-16 pt-10 dark:border-zinc-700/40">
           <Container.Inner>
-            <div className="mx-auto mb-8 max-w-md">
+            {/* <div className="mx-auto mb-8 max-w-md">
               <Newsletter subCount={`${subs?.subCount ?? '0'}`} />
-            </div>
+            </div> */}
             <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
               <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">
-                &copy; {new Date().getFullYear()} Cali Castle. 网站已开源：
+                &copy; {new Date().getFullYear()} smallbone. {t('site based on')}：
                 <PeekabooLink href="https://github.com/CaliCastle/cali.so">
-                  GitHub
+                  Cali.so
                 </PeekabooLink>
               </p>
               <Links />

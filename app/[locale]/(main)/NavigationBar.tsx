@@ -5,6 +5,7 @@ import { clsxm } from '@zolplay/utils'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import React from 'react'
 
 import { navigationItems } from '~/config/nav'
@@ -59,6 +60,8 @@ function Desktop({
   )
   const background = useMotionTemplate`radial-gradient(${radius}px circle at ${mouseX}px ${mouseY}px, var(--spotlight-color) 0%, transparent 65%)`
 
+  const t = useTranslations('Nav')
+
   return (
     <nav
       onMouseMove={handleMouseMove}
@@ -80,9 +83,9 @@ function Desktop({
       />
 
       <ul className="flex bg-transparent px-3 text-sm font-medium text-zinc-800 dark:text-zinc-200 ">
-        {navigationItems.map(({ href, text }) => (
+        {navigationItems.map(({ href, tValue }) => (
           <NavItem key={href} href={href}>
-            {text}
+            {t(tValue)}
           </NavItem>
         ))}
       </ul>

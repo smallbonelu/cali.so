@@ -14,7 +14,7 @@ import { useMutation } from 'react-query'
 import { useReward } from 'react-rewards'
 import TextareaAutosize from 'react-textarea-autosize'
 
-import { signBook } from '~/app/(main)/guestbook/guestbook.state'
+import { signBook } from '~/app/[locale]/(main)/guestbook/guestbook.state'
 import { EyeCloseIcon, EyeOpenIcon, TiltedSendIcon } from '~/assets'
 import { CommentMarkdown } from '~/components/CommentMarkdown'
 import { RichLink } from '~/components/links/RichLink'

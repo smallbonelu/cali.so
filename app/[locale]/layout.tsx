@@ -5,7 +5,7 @@ import './prism.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata, Viewport } from 'next'
 
-import { ThemeProvider } from '~/app/(main)/ThemeProvider'
+import { ThemeProvider } from '~/app/[locale]/(main)/ThemeProvider'
 import { url } from '~/lib'
 import { zhCN } from '~/lib/clerkLocalizations'
 import { sansFont } from '~/lib/font'
@@ -14,11 +14,11 @@ import { seo } from '~/lib/seo'
 export const metadata: Metadata = {
   metadataBase: seo.url,
   title: {
-    template: '%s | Cali Castle',
+    template: '%s | smallbone',
     default: seo.title,
   },
   description: seo.description,
-  keywords: 'Cali,Cali Castle,郭晓楠,佐玩,创始人,CEO,开发者,设计师,细节控,创新',
+  keywords: '鲁鄂,开发者,猫奴,细节控,跑者',
   manifest: '/site.webmanifest',
   robots: {
     index: true,
@@ -34,17 +34,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: {
       default: seo.title,
-      template: '%s | Cali Castle',
+      template: '%s | Bruce Lu',
     },
     description: seo.description,
-    siteName: 'Cali Castle',
+    siteName: 'Bruce Lu',
     locale: 'zh_CN',
     type: 'website',
-    url: 'https://cali.so',
+    url: 'https://smallbonelu.github.io/',
   },
   twitter: {
-    site: '@thecalicastle',
-    creator: '@thecalicastle',
+    site: '@smallbonelu',
+    creator: '@smallbonelu',
     card: 'summary_large_image',
     title: seo.title,
     description: seo.description,
@@ -66,13 +66,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
+  params: { locale },
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  params: { locale: string },
 }) {
   return (
     <ClerkProvider localization={zhCN}>
       <html
-        lang="zh-CN"
+        lang={locale}
         className={`${sansFont.variable} m-0 h-full p-0 font-sans antialiased`}
         suppressHydrationWarning
       >
