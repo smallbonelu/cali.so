@@ -1,6 +1,6 @@
 import { authMiddleware } from '@clerk/nextjs'
 import { get } from '@vercel/edge-config'
-import { type NextFetchEvent, type NextMiddleware, type NextRequest, NextResponse } from 'next/server'
+import { type NextMiddleware, type NextRequest, NextResponse } from 'next/server'
 import createMiddleware from 'next-intl/middleware';
 
 import { kvKeys } from '~/config/kv'
@@ -40,34 +40,15 @@ function chain(functions: MiddlewareFactory[] = [], index = 0): NextMiddleware {
   return () => NextResponse.next()
 }
 
-const localeMiddleware: MiddlewareFactory = () => {
-  return (req: NextRequest, _next: NextFetchEvent) => {
-    const publicPathnameRegex = RegExp(
-      `^(/(${locales.join('|')}))?(${publicRoutes
-        .flatMap((p) => (p === '/' ? ['', '/'] : p))
-        .join('|')})/?$`,
-      'i'
-    );
-    const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+const intlMiddleware = createMiddleware({
+  // A list of all locales that are supported
+  locales,
 
-    if (isPublicPage) {
-      const middleware = createMiddleware({
-        // A list of all locales that are supported
-        locales,
+  // Used when no locale matches
+  defaultLocale,
 
-        // Used when no locale matches
-        defaultLocale,
-
-        // 默认语言不重定向
-        localePrefix: 'as-needed',
-      });
-
-      return middleware(req);
-    } else {
-      return NextResponse.next();
-    }
-  }
-}
+  localePrefix: 'as-needed',
+});
 
 
 async function beforeAuthMiddleware(req: NextRequest) {
@@ -107,11 +88,10 @@ async function beforeAuthMiddleware(req: NextRequest) {
     }
   }
 
-  return NextResponse.next()
+  return intlMiddleware(req)
 }
 
 export default chain([
-  localeMiddleware,
   () =>
     authMiddleware({
       beforeAuth: beforeAuthMiddleware,

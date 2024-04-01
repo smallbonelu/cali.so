@@ -27,7 +27,7 @@ function AvatarImage({
   large = false,
   className,
   href,
-  // alt,
+  alt,
   ...props
 }: AvatarImageProps) {
   return (
@@ -38,7 +38,7 @@ function AvatarImage({
       {...props}
     >
       <Image
-        src={portraitImage}
+        src={ alt ? portraitImage : portraitImage}
         alt=""
         sizes={large ? '4rem' : '2.25rem'}
         className={clsxm(
