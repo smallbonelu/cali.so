@@ -20,6 +20,10 @@ const nextConfig = {
     ],
   },
 
+  experimental: {
+    taint: true,
+  },
+
   redirects() {
     return [
       {

@@ -5,15 +5,21 @@ import { BlogPosts } from '~/app/[locale]/(main)/blog/BlogPosts'
 import { Headline } from '~/app/[locale]/(main)/Headline'
 import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
+import { getSettings } from '~/sanity/queries'
 
-export default function BlogHomePage() {
+import { Photos } from './Photos'
+
+export default async function BlogHomePage() {
+  const settings = await getSettings()
   const t = useTranslations('Blog')
   return (
     <>
       <Container className="mt-10">
         <Headline />
       </Container>
-      {/* <Photos /> */}
+
+      {settings.heroPhotos && <Photos photos={settings.heroPhotos} />}
+
       <Container className="mt-24 md:mt-28">
         <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
           <div className="flex flex-col gap-6 pt-6">
