@@ -5,11 +5,11 @@ import { BlogPosts } from '~/app/[locale]/(main)/blog/BlogPosts'
 import { Headline } from '~/app/[locale]/(main)/Headline'
 import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
-import { getSettings } from '~/sanity/queries'
+// import { getSettings } from '~/sanity/queries'
 
 
 export default async function BlogHomePage() {
-  const settings = await getSettings()
+  // const settings = await getSettings()
   const t = await getTranslations('Blog')
   return (
     <>
