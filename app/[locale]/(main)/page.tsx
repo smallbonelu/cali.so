@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import React from 'react'
 
 import { BlogPosts } from '~/app/[locale]/(main)/blog/BlogPosts'
@@ -7,18 +7,17 @@ import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
 import { getSettings } from '~/sanity/queries'
 
-import { Photos } from './Photos'
 
 export default async function BlogHomePage() {
   const settings = await getSettings()
-  const t = useTranslations('Blog')
+  const t = await getTranslations('Blog')
   return (
     <>
       <Container className="mt-10">
         <Headline />
       </Container>
 
-      {settings.heroPhotos && <Photos photos={settings.heroPhotos} />}
+      {/* {settings.heroPhotos && <Photos photos={settings.heroPhotos} />} */}
 
       <Container className="mt-24 md:mt-28">
         <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
