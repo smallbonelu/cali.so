@@ -13,6 +13,8 @@ import { redis } from '~/lib/redis'
 type MiddlewareFactory = (middleware: NextMiddleware) => NextMiddleware;
 
 const publicRoutes = [
+  '/en',
+  '/zh',
   '/',
   '/api(.*)',
   '/blog(.*)',
