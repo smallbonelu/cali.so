@@ -13,8 +13,6 @@ import { redis } from '~/lib/redis'
 type MiddlewareFactory = (middleware: NextMiddleware) => NextMiddleware;
 
 const publicRoutes = [
-  '/en',
-  '/zh',
   '/',
   '/api(.*)',
   '/blog(.*)',
@@ -97,6 +95,16 @@ export default chain([
   () =>
     authMiddleware({
       beforeAuth: beforeAuthMiddleware,
-      publicRoutes,
+      publicRoutes: (req: NextRequest) => {
+        const publicPathnameRegex = RegExp(
+          `^(/(${locales.join('|')}))?(${publicRoutes
+            .flatMap((p) => (p === '/' ? ['', '/'] : p))
+            .join('|')})/?$`,
+          'i'
+        );
+        const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+        console.log('[ isPublicPage ] >', isPublicPage, req.nextUrl.pathname);
+        return isPublicPage;
+      },
     })
 ])

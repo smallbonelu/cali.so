@@ -19,9 +19,14 @@ const nextConfig = {
       }
     ],
   },
-
+  logging: {
+    fetches: {
+      fullUrl: true,
+    }
+  },
   experimental: {
     taint: true,
+    webVitalsAttribution: ['CLS', 'LCP']
   },
 
   redirects() {
